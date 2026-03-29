@@ -1,0 +1,333 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f4f7fa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+.login_page {
+    width: 100%;
+    float: left;
+    background-image: url("../image/background 2.jpg");
+    background-size: cover;
+    background-repeat: no repeat;
+}
+
+.login_page_bg {
+    width: 100%;
+    background-color: rgb(0 0 0 / 50%);
+}
+
+.center {
+    width: 650px;
+}
+
+.login_input {
+    width: 100%;
+    float: left;
+    color: rgb(173, 168, 168);
+    background: rgb(0 0 0 / 10%);
+    backdrop-filter: blur(30px) saturate(180%);
+    border-radius: 5%;
+    margin: 100px 0px;
+}
+
+.login_input_box {
+    float: left;
+    padding: 80px 50px;
+
+}
+
+.login_input_box h1 {
+    font-size: 36px;
+    font-weight: normal;
+    color: rgb(196, 187, 187);
+    text-shadow: 0 2px 4px #000;
+}
+
+.login_input_box p {
+    color: rgb(196, 187, 187);
+    text-shadow: 0 2px 4px #000;
+    margin-top: 20px;
+}
+
+.login_input_box span {
+    font-weight: bold;
+    color: #5d6939;
+}
+
+.login_details {
+    width: 100%;
+    float: left;
+    margin-top: 20px;
+}
+
+.login_details .text {
+    font-size: 16px;
+    font-weight: normal;
+    margin-left: 5px;
+    color: rgb(196, 187, 187);
+    text-shadow: 0 2px 4px #000;
+}
+
+.login_details .input1 {
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    outline: none;
+    border-radius: 5px;
+    border: 0;
+    background: rgb(0 0 0 / 20%);
+    box-shadow: 0 1px 1px #000;
+}
+
+.login_details .input2 {
+    margin-top: 30px;
+}
+
+.text2 {
+    color: rgb(196, 187, 187);
+}
+
+.login_details a {
+    margin-left: 292px;
+}
+
+.login_details button {
+    margin-top: 15px;
+    width: 100%;
+    height: 35px;
+    cursor: pointer;
+    color: white;
+    border: 0;
+    font-weight: 600;
+    border-radius: 5px;
+    background-color: red;
+}
+
+.login_details button:hover {
+    transition: .3s ease;
+    background-color: rgb(210, 4, 4);
+    box-shadow: 0 1px 4px rgb(185, 183, 183);
+}
+
+.gender-container {
+    width: 100%;
+    display: flex;
+    margin: 10px 0px;
+}
+
+.gender-option {
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    align-items: center;
+    width: 120px;
+    padding: 8px 15px;
+    margin-right: 20px;
+}
+
+.gender-option input {
+    margin-left: 10px;
+}
+
+.gender-option label {
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form_main {
+    width: 100%;
+    float: left;
+    background-color: #dbdaae;
+    background-image: url("../image/background 2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.form_box {
+    width: 90%;
+    float: left;
+    margin: 50px 50px;
+    background-color: #faf2e5;
+    box-shadow: 0 4px 16px #000;
+    height: 750px;
+    border-radius: 20px;
+
+}
+
+.box_header {
+    padding: 50px 0px;
+    background-color: #5d6939;
+}
+
+.center2 {
+    width: 970px;
+    margin: 0 auto;
+}
+
+.box_details {
+    padding: 0px 50px;
+}
+
+.box_details h1 {
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.box_details p {
+    text-align: center;
+    font-size: 18px;
+}
+
+.form-input {
+    width: 100%;
+    float: left;
+    margin-top: 30px;
+}
+.form-input::placeholder{
+    color: #968c8c;
+}
+
+.form-input label {
+    margin: 15px 0px;
+    font-weight: normal;
+}
+
+.label1 {
+    font-size: 14px;
+}
+
+.input_1 {
+    width: 56%;
+    padding: 5px 5px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    outline: none;
+    backdrop-filter: blur(44px) saturate(500%);
+}
+
+.input_2 {
+    width: 24%;
+    padding: 5px 10px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    outline: none;
+    backdrop-filter: blur(44px) saturate(500%);
+}
+
+.input_3 {
+    width: 28%;
+    padding: 5px 10px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    outline: none;
+    backdrop-filter: blur(44px) saturate(500%);
+}
+
+.input_4 {
+    width: 25%;
+    padding: 5px 5px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    outline: none;
+    backdrop-filter: blur(44px) saturate(500%);
+}
+
+.input_5 {
+    width: 22%;
+    padding: 8px 10px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    outline: none;
+    backdrop-filter: blur(44px) saturate(500%);
+}
+
+.input_6 {
+    width: 90%;
+    padding: 5px 5px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    outline: none;
+    backdrop-filter: blur(44px) saturate(500%);
+}
+.voice-recoder{
+    margin: 20px 0px;
+    text-align: center;
+    border: none;
+    padding: 10px 30px;
+    backdrop-filter: blur(44px) saturate(300%);
+
+}
+
+
+.row {
+    margin: 10px;
+}
+button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+    margin-left: 6px;
+    visibility: hidden;
+}
+.submit_button{
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+.btn_submit{
+    padding: 10px 50px;
+    width: 40%;
+    background-color: red;
+    color: #fff;
+    font-size: 16px;
+}
+.btn_submit:hover{
+    color: #fff;
+    background-color: #5d6939;
+}
+.nav-right {
+    float: right;
+    padding-top: 15px;
+}
+.nav-right li a {
+    color: #000 !important;
+    font-size: 18px;
+    font-weight: 600;
+    
+}
+.nav-right li a:hover{
+    
+    text-shadow: 0 1px 4px red;
+    border-bottom: solid 2px red;
+}

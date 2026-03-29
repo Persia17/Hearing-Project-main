@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-500: #84cc16; /* lime-500 */
+  --color-primary-600: #65a30d; /* lime-600 */
+  --color-brand-dark: #2d3e1f;
+  --color-brand-light: #5d6939;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fafc; /* slate-50 */
+}
