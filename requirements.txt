@@ -1,13 +1,7 @@
 django>=5.0.0
-numpy
-librosa
-joblib
-google-generativeai
-python-dotenv
-soundfile
-scikit-learn
-scipy
 gunicorn
 dj-database-url
 psycopg2-binary
 whitenoise
+google-generativeai
+python-dotenv
