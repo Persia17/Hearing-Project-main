@@ -4,6 +4,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://hearing-project-main.onrender.com/api/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/"
     }
   ]
 }
