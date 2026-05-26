@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 function LandingPage() {
   return (
     <div className="bg-slate-50 min-h-screen font-sans">
-      {/* Hero Section */}
+
       <section className="relative overflow-hidden bg-slate-900 pt-24 pb-32 lg:pt-36 lg:pb-48">
         <div className="absolute inset-0">
           <img
@@ -11,7 +11,7 @@ function LandingPage() {
             alt="Hero Background"
             className="w-full h-full object-cover opacity-30 mix-blend-overlay"
           />
-          {/* Gradient Overlay */}
+  
           <div className="absolute inset-0 bg-linear-to-b from-slate-900/80 via-slate-900/60 to-slate-900/90"></div>
         </div>
         
@@ -35,7 +35,6 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* About / Features Section */}
       <section className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -49,11 +48,9 @@ function LandingPage() {
             </p>
           </div>
 
-          {/* Three step Process */}
           <div className="mt-20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
               
-              {/* Step 1 */}
               <div className="relative group bg-slate-50 rounded-3xl p-8 hover:bg-lime-50 transition-colors duration-300 border border-slate-100 shadow-xs hover:shadow-xl" data-aos="fade-up" data-aos-delay="100">
                 <div className="absolute -top-6 left-8 bg-linear-to-br from-lime-400 to-green-500 w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg transform group-hover:-translate-y-2 transition-transform duration-300">
                   <i className="fas fa-microphone-alt text-2xl"></i>
@@ -64,7 +61,6 @@ function LandingPage() {
                 </p>
               </div>
 
-              {/* Step 2 */}
               <div className="relative group bg-slate-50 rounded-3xl p-8 hover:bg-lime-50 transition-colors duration-300 border border-slate-100 shadow-xs hover:shadow-xl" data-aos="fade-up" data-aos-delay="200">
                 <div className="absolute -top-6 left-8 bg-linear-to-br from-lime-400 to-green-500 w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg transform group-hover:-translate-y-2 transition-transform duration-300">
                   <i className="fas fa-brain text-2xl"></i>
@@ -91,7 +87,6 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Feature List Section with elegant UI */}
       <section className="py-24 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
           <div data-aos="fade-right">
@@ -134,9 +129,8 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="relative py-24 bg-linear-to-br from-lime-500 to-green-600 overflow-hidden">
-        {/* Decorative Circles */}
+       
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-white opacity-10 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-black opacity-10 blur-3xl"></div>
         

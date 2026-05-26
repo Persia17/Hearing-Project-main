@@ -3,6 +3,13 @@ import tempfile
 import random
 import json
 from collections import Counter
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
 
 try:
     import numpy as np
@@ -237,3 +244,52 @@ def api_get_profile(request):
         return JsonResponse({"status": "success", "profile": data})
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
+@csrf_exempt
+def api_get_reports(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "Not authenticated"}, status=401)
+    try:
+        reports = PatientReport.objects.filter(user=request.user).order_by('-created_at')
+        data = [{
+            "id": r.id,
+            "name": r.name,
+            "date": str(r.date) if r.date else "",
+            "diagnosis": r.diagnosis,
+        } for r in reports]
+        return JsonResponse({"status": "success", "reports": data})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+@csrf_exempt
+def api_delete_report(request, report_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "Not authenticated"}, status=401)
+    if request.method == "DELETE":
+        try:
+            report = get_object_or_404(PatientReport, id=report_id, user=request.user)
+            report.delete()
+            return JsonResponse({"status": "success", "message": "Report deleted successfully"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+    return JsonResponse({"status": "error", "message": "Only DELETE allowed"}, status=405)
+
+@csrf_exempt
+def api_chat(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            message = data.get("message", "")
+            
+            if not GEMINI_API_KEY or GEMINI_API_KEY == "your_actual_api_key_here":
+                return JsonResponse({"status": "error", "message": "Please configure your Google Gemini API Key in the .env file to use the Chatbot."}, status=400)
+                
+            model = genai.GenerativeModel(
+                "gemini-flash-latest",
+                system_instruction="You are an empathetic, specialized AI assistant for the TalkON web application. Your sole purpose is to provide accurate, helpful information regarding speech disorders (like stuttering, lisp, dysphonia, aphasia, etc.) and to answer questions about the features of this website. Do not answer questions outside of these topics. Keep your answers concise, empathetic, and encouraging."
+            )
+            response = model.generate_content(message)
+            return JsonResponse({"status": "success", "response": response.text})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+    return JsonResponse({"status": "error", "message": "Only POST allowed"}, status=405)

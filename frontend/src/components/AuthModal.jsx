@@ -100,13 +100,11 @@ function AuthModal({ isOpen, onClose, initialView = 'login', onLogin }) {
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center font-sans tracking-wide">
-      {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       ></div>
       
-      {/* Modal Box */}
       <div 
         className="relative bg-white w-full max-w-md m-4 rounded-[2.5rem] shadow-2xl border border-slate-100 p-8 sm:p-10 z-10 max-h-[90vh] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         onClick={(e) => e.stopPropagation()}
@@ -118,7 +116,6 @@ function AuthModal({ isOpen, onClose, initialView = 'login', onLogin }) {
           <i className="fas fa-times text-xl"></i>
         </button>
 
-        {/* Decorative elements */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-40 h-40 bg-lime-400 opacity-20 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-40 h-40 bg-green-500 opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 

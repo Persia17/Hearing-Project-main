@@ -47,7 +47,6 @@ function PlanPage() {
     );
   }
 
-  // Define tasks based on disorder exactly as they were in Django templates
   const getTasksForDisorder = (disorder) => {
     switch(disorder) {
       case 'lisp':

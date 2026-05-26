@@ -1,9 +1,48 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function HomePage() {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlans();
+  }, []);
+
+  const fetchPlans = async () => {
+    try {
+      const response = await fetch('/api/reports/');
+      const data = await response.json();
+      if (data.status === 'success') {
+        setReports(data.reports);
+      }
+    } catch (error) {
+      console.error("Error fetching plans:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removePlan = async (id) => {
+    if (!window.confirm("Are you sure you want to remove this plan?")) return;
+    try {
+      const response = await fetch(`/api/report/delete/${id}/`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (data.status === 'success') {
+         setReports(reports.filter(r => r.id !== id));
+      } else {
+         alert("Failed to delete plan: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error removing plan:", error);
+    }
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen font-sans">
-      {/* Hero Section */}
+
       <section className="relative bg-slate-900 pt-20 pb-24 lg:pt-32 lg:pb-32 overflow-hidden border-b-[6px] border-lime-500">
         <div className="absolute inset-0">
           <img
@@ -19,7 +58,7 @@ function HomePage() {
             Dashboard
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-4 max-w-3xl leading-tight">
-            Hi Test User, <br/>
+            Hi, <br/>
             Welcome back to your <span className="text-lime-400">Virtual Speech Therapist</span>
           </h1>
           <p className="mt-4 text-xl text-slate-400 mb-10 max-w-2xl">
@@ -34,8 +73,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Quick Action Cards */}
-      <section className="relative -mt-12 z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-20">
+      <section className="relative -mt-12 z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           <div className="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 flex items-start space-x-4 hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
@@ -71,33 +109,71 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Recent Activity / Content */}
       <section className="py-12 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Recent Activity</h2>
-            <button className="text-lime-600 font-semibold hover:text-lime-700">View All Tasks &rarr;</button>
           </div>
           
           <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" data-aos="fade-up">
-            <div className="p-8 text-center text-slate-500">
-               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                 <i className="fas fa-folder-open text-2xl text-slate-400"></i>
-               </div>
-               <h3 className="text-lg font-bold text-slate-700">No active plans yet</h3>
-               <p className="mt-2 text-sm text-slate-500">Complete a new diagnosis test to automatically generate your customized therapy plan.</p>
-               <br/>
-               <Link to="/formpage">
-                 <button className="bg-lime-50 text-lime-600 font-bold px-6 py-2 rounded-lg hover:bg-lime-100">
-                     Run Diagnosis
-                 </button>
-               </Link>
-            </div>
+            {loading ? (
+              <div className="p-8 text-center text-slate-500">
+                <p>Loading your plans...</p>
+              </div>
+            ) : reports.length > 0 ? (
+              <div className="divide-y divide-slate-100">
+                {reports.slice(0, 5).map((report) => (
+                  <div key={report.id} className="p-6 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-lime-100 rounded-full flex items-center justify-center text-lime-600">
+                        <i className="fas fa-file-medical text-xl"></i>
+                      </div>
+                      <div>
+                        <Link to={`/result/${report.id}`} className="text-lg font-bold text-slate-800 hover:text-lime-600 transition-colors">
+                          {report.name}'s Plan
+                        </Link>
+                        <p className="text-sm text-slate-500">Created: {report.date}</p>
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-600">
+                          Diagnosis: <span className="text-lime-700 capitalize">{report.diagnosis}</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Link to={`/plan/${report.id}`}>
+                        <button className="px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg shadow hover:bg-slate-800 transition-colors cursor-pointer">
+                          View details
+                        </button>
+                      </Link>
+                      <button 
+                        onClick={() => removePlan(report.id)}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                        title="Remove Plan"
+                      >
+                        <i className="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center text-slate-500">
+                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                   <i className="fas fa-folder-open text-2xl text-slate-400"></i>
+                 </div>
+                 <h3 className="text-lg font-bold text-slate-700">No active plans yet</h3>
+                 <p className="mt-2 text-sm text-slate-500">Complete a new diagnosis test to automatically generate your customized therapy plan.</p>
+                 <br/>
+                 <Link to="/formpage">
+                   <button className="bg-lime-50 text-lime-600 font-bold px-6 py-2 rounded-lg hover:bg-lime-100 cursor-pointer">
+                       Run Diagnosis
+                   </button>
+                 </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="zoom-in">
           <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl mb-6">

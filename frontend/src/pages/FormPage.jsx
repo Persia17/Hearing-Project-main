@@ -101,12 +101,11 @@ function FormPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans relative overflow-hidden">
-      {/* Decorative gradient blobs */}
+
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-lime-300/40 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/3"></div>
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-green-300/40 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-y-1/3 -translate-x-1/3"></div>
       <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-emerald-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2"></div>
 
-      {/* Top Header */}
       <header className="w-full bg-slate-900 border-b-4 border-lime-500 py-4 px-6 sm:px-10 flex justify-between items-center z-10 shadow-lg sticky top-0" data-aos="fade-down">
         <Link to="/" className="text-2xl font-black bg-clip-text text-transparent bg-linear-to-r from-lime-400 to-green-300 tracking-tight hover:scale-105 transition-transform">
           TalkON
@@ -117,13 +116,10 @@ function FormPage() {
         </Link>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 sm:py-12 z-10 flex flex-col justify-center min-h-[calc(100vh-80px)]" data-aos="zoom-in" data-aos-duration="800">
-        
-        {/* Form Card */}
+
         <div className="bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden flex flex-col">
-          
-          {/* Card Header */}
+
           <div className="bg-slate-900 p-8 sm:p-10 relative overflow-hidden group">
             <div className="absolute inset-0 bg-linear-to-br from-lime-500/20 to-green-600/20 opacity-50 group-hover:opacity-70 transition-opacity duration-700"></div>
             <div className="absolute -right-20 -top-20 w-40 h-40 bg-lime-500 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-pulse"></div>
@@ -140,12 +136,10 @@ function FormPage() {
               </div>
             </div>
           </div>
-          
-          {/* Card Body */}
+ 
           <div className="p-8 sm:p-10">
             <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-10">
-              
-              {/* Left Column: Patient Details */}
+
               <div className="w-full md:w-1/2 space-y-6">
                 <div className="flex items-center gap-2 mb-6 border-b border-slate-100 pb-4">
                   <i className="fa-regular fa-user text-lime-600 text-xl"></i>
@@ -208,13 +202,10 @@ function FormPage() {
                 </div>
               </div>
 
-              {/* Center Divider for Desktop */}
               <div className="hidden md:block w-px bg-linear-to-b from-transparent via-slate-200 to-transparent"></div>
-              
-              {/* Right Column: Audio & Analysis */}
+
               <div className="w-full md:w-1/2 flex flex-col justify-between space-y-8">
-                
-                {/* File Upload Section */}
+ 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-2">
                     <i className="fa-solid fa-microphone-lines text-lime-600 text-xl"></i>
@@ -252,7 +243,6 @@ function FormPage() {
                   </div>
                 </div>
 
-                {/* AI Analysis Result */}
                 <div className="space-y-3 pt-6 border-t border-slate-100 flex-1">
                   <div className="flex justify-between items-end mb-2">
                     <label htmlFor="diagnosis" className="block text-sm font-semibold text-slate-600 ml-1">AI Diagnosis Result</label>
@@ -292,7 +282,6 @@ function FormPage() {
                   </div>
                 </div>
 
-                {/* Submit Action */}
                 <div className="">
                   <button 
                     type="submit" 

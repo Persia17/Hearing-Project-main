@@ -8,10 +8,11 @@ import FormPage from './pages/FormPage';
 import ResultPage from './pages/ResultPage';
 import PlanPage from './pages/PlanPage';
 import AuthModal from './components/AuthModal';
+import Chatbot from './components/Chatbot';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   // Auth Modal State
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalView, setAuthModalView] = useState('login');
@@ -26,7 +27,6 @@ function App() {
 
   const closeAuthModal = () => setIsAuthModalOpen(false);
 
-  // Simple Protected Component approach
   const ProtectedRoute = ({ children }) => {
     useEffect(() => {
       if (!isAuthenticated) {
@@ -51,17 +51,17 @@ function App() {
             <Route path="/formpage" element={<ProtectedRoute><FormPage /></ProtectedRoute>} />
             <Route path="/result/:reportId" element={<ProtectedRoute><ResultPage /></ProtectedRoute>} />
             <Route path="/plan/:reportId" element={<ProtectedRoute><PlanPage /></ProtectedRoute>} />
-            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
         <Footer />
-        <AuthModal 
-          isOpen={isAuthModalOpen} 
-          onClose={closeAuthModal} 
-          initialView={authModalView} 
-          onLogin={handleLogin} 
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={closeAuthModal}
+          initialView={authModalView}
+          onLogin={handleLogin}
         />
+        <Chatbot />
       </div>
     </Router>
   );
