@@ -1,27 +1,22 @@
 from pathlib import Path
+import os
+import dj_database_url
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-change-this-to-a-secret-key"
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-this-to-a-secret-key")
 
-# DEVELOPMENT SETTINGS
-DEBUG = True
-ALLOWED_HOSTS = []  # Empty list means allow all in debug mode
+# ENVIRONMENT SETTINGS
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-# Installed apps
-from pathlib import Path
-
-# Base directory of the project
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-change-this-to-a-secret-key"
-
-# DEVELOPMENT SETTINGS
-DEBUG = True
-ALLOWED_HOSTS = []  # Empty list means allow all in debug mode
+# ALLOWED_HOSTS: Split comma-separated string, default to "*" (allow all) for easy setup
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # Installed apps
 INSTALLED_APPS = [
@@ -34,9 +29,10 @@ INSTALLED_APPS = [
     "account",  # your authentication app
 ]
 
-# Middleware configuration
+# Middleware configuration (includes WhiteNoise for static files in production)
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serves static files efficiently in production
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -68,15 +64,17 @@ TEMPLATES = [
 # WSGI application
 WSGI_APPLICATION = "core.wsgi.application"
 
-# Database configuration (SQLite for local development)
+# Database configuration
+# Uses DATABASE_URL environment variable if set (production PostgreSQL), otherwise falls back to local SQLite
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
+
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 # Password validation
@@ -94,34 +92,35 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JS, images)
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Folder where collected static files will live in production
 
-DEBUG = True  # important for dev
-
-STATIC_URL = '/static/'
-import os
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / "static",
 ]
 
+# Enable WhiteNoise compression and caching support
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
-# Media files (if needed later)
+# Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Authentication redirects
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "index"
-LOGIN_URL = 'login'
-
+LOGIN_URL = "login"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Keep session active for 2 weeks (default is until browser closes)
-
-
 # Make session persistent
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
-
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 days

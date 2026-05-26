@@ -291,5 +291,26 @@ def api_chat(request):
             response = model.generate_content(message)
             return JsonResponse({"status": "success", "response": response.text})
         except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+            error_str = str(e)
+            if "API key" in error_str or "leaked" in error_str or "403" in error_str or "API_KEY_INVALID" in error_str:
+                fallback_msg = (
+                    "⚠️ **[SYSTEM NOTICE]** It looks like the Google Gemini API Key configured in your local `.env` file has been **reported as leaked** or is invalid, and has been disabled by Google.\n\n"
+                    "**To fix this and activate my full AI power:**\n"
+                    "1️⃣ Go to **[Google AI Studio](https://aistudio.google.com/)** and click **Get API Key** to generate a new free key.\n"
+                    "2️⃣ Open your `.env` file in the root folder and update `GEMINI_API_KEY=YOUR_NEW_KEY`.\n"
+                    "3️⃣ **Restart your Django server** so the new key is loaded.\n\n"
+                    "*In the meantime, I've loaded in standard fallback mode. Let me know if you want to know about stuttering, lisps, or speech therapy exercises!*"
+                )
+                
+                # Rule-based support helper
+                msg_lower = message.lower()
+                if "stutter" in msg_lower:
+                    fallback_msg += "\n\n💡 **About Stuttering**: Stuttering is a speech disorder characterized by sound repetitions, prolongations, or blocks. Effective strategies include light contact practices (softening the start of words) and slow, relaxed diaphragmatic breathing."
+                elif "lisp" in msg_lower:
+                    fallback_msg += "\n\n💡 **About Lisping**: A lisp is a speech sound error typically affecting /s/ and /z/ sounds (e.g. pronouncing /s/ as /th/). Standard exercises focus on target tongue-tip placement behind the top front teeth."
+                elif "exercise" in msg_lower or "therapy" in msg_lower:
+                    fallback_msg += "\n\n💡 **Speech Exercises**: Standard voice exercises include easy onset pronunciation, word pacing drills, breathing coordination exercises, and tongue positioning stretches."
+                
+                return JsonResponse({"status": "success", "response": fallback_msg})
+            return JsonResponse({"status": "error", "message": error_str}, status=400)
     return JsonResponse({"status": "error", "message": "Only POST allowed"}, status=405)
