@@ -133,9 +133,9 @@ def predict_audio(audio_file):
                 print("Gemini analysis output:", prediction)
             except Exception as gemini_err:
                 print("Gemini audio analysis failed:", gemini_err)
-                prediction = "healthy"  # default safe fallback
+                prediction = f"Gemini Error: {str(gemini_err)}"  # Return actual error for debugging
         else:
-            prediction = "healthy"  # default safe fallback
+            prediction = f"Error: Local modules missing and no GEMINI_API_KEY set ({str(e)})"
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
