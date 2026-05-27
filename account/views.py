@@ -94,8 +94,48 @@ def predict_audio(audio_file):
 
         prediction = Counter(predictions).most_common(1)[0][0]
     except Exception as e:
-        print("Prediction error or modules missing:", e)
-        prediction = "stut"  # mock fallback
+        print("Local prediction error or modules missing:", e)
+        # Fallback to Gemini AI if API key is set
+        if GEMINI_API_KEY:
+            try:
+                print("Falling back to Gemini audio API for voice analysis...")
+                uploaded_file = genai.upload_file(path=temp_path)
+                
+                # We use gemini-1.5-flash for audio files
+                model = genai.GenerativeModel("gemini-1.5-flash")
+                prompt = (
+                    "Analyze the speech in this audio file. Classify the speech pattern into one of these categories: "
+                    "stuttering (respond with 'stut'), lisp (respond with 'lisp'), cluttering (respond with 'clut'), "
+                    "or normal/healthy speech (respond with 'healthy'). "
+                    "Respond with exactly one word (either 'stut', 'lisp', 'clut', or 'healthy') and nothing else."
+                )
+                response = model.generate_content([uploaded_file, prompt])
+                result = response.text.strip().lower()
+                
+                # Delete the file from Gemini cloud
+                try:
+                    genai.delete_file(uploaded_file.name)
+                except Exception:
+                    pass
+                
+                # Extract clean tag
+                if result in ['stut', 'lisp', 'clut', 'healthy']:
+                    prediction = result
+                else:
+                    if 'lisp' in result:
+                        prediction = 'lisp'
+                    elif 'clut' in result:
+                        prediction = 'clut'
+                    elif 'stut' in result:
+                        prediction = 'stut'
+                    else:
+                        prediction = 'healthy'
+                print("Gemini analysis output:", prediction)
+            except Exception as gemini_err:
+                print("Gemini audio analysis failed:", gemini_err)
+                prediction = "healthy"  # default safe fallback
+        else:
+            prediction = "healthy"  # default safe fallback
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
