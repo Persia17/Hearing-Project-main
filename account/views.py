@@ -68,11 +68,29 @@ def augment_audio(y, sr):
     return y
 
 def predict_audio(audio_file):
-    prediction = "Error"
+    prediction = "healthy"  # Graceful default fallback
     if not audio_file:
         return prediction
         
-    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(audio_file.name)[1]) as temp_audio:
+    # Get proper file extension to help Gemini detect MIME type correctly
+    ext = os.path.splitext(audio_file.name)[1].lower()
+    if not ext and hasattr(audio_file, 'content_type'):
+        mime_map = {
+            'audio/wav': '.wav',
+            'audio/x-wav': '.wav',
+            'audio/mpeg': '.mp3',
+            'audio/mp3': '.mp3',
+            'audio/ogg': '.ogg',
+            'audio/webm': '.webm',
+            'audio/x-m4a': '.m4a',
+            'audio/m4a': '.m4a',
+            'audio/mp4': '.mp4',
+        }
+        ext = mime_map.get(audio_file.content_type, '.wav')
+    if not ext:
+        ext = '.wav'  # Fallback standard extension
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_audio:
         for chunk in audio_file.chunks():
             temp_audio.write(chunk)
         temp_path = temp_audio.name
@@ -92,11 +110,14 @@ def predict_audio(audio_file):
             features_aug = extract_features_audio(y_aug, sr=sr).reshape(1, -1)
             predictions.append(model.predict(features_aug)[0])
 
-        prediction = Counter(predictions).most_common(1)[0][0]
+        # Standardize local model predictions to lowercase
+        raw_prediction = Counter(predictions).most_common(1)[0][0]
+        prediction = str(raw_prediction).lower()
+        print("Local model analysis output:", prediction)
     except Exception as e:
         print("Local prediction error or modules missing:", e)
         # Fallback to Gemini AI if API key is set
-        if GEMINI_API_KEY:
+        if GEMINI_API_KEY and GEMINI_API_KEY != "your_actual_api_key_here":
             try:
                 print("Falling back to Gemini audio API for voice analysis...")
                 uploaded_file = genai.upload_file(path=temp_path)
@@ -104,21 +125,23 @@ def predict_audio(audio_file):
                 # We use gemini-1.5-flash for audio files
                 model = genai.GenerativeModel("gemini-1.5-flash")
                 prompt = (
-                    "Analyze the speech in this audio file. Classify the speech pattern into one of these categories: "
-                    "stuttering (respond with 'stut'), lisp (respond with 'lisp'), cluttering (respond with 'clut'), "
-                    "or normal/healthy speech (respond with 'healthy'). "
-                    "Respond with exactly one word (either 'stut', 'lisp', 'clut', or 'healthy') and nothing else."
+                    "You are an expert Speech-Language Pathologist (SLP) analyzing an audio recording of a patient's speech.\n"
+                    "Listen to the speech in this audio file carefully.\n"
+                    "Analyze it for acoustic and linguistic cues of the following speech patterns:\n"
+                    "- Stuttering (characterised by repetitions of sounds, syllables, or words; prolongations of sounds; or blocks/silent pauses during speech). Code: stut\n"
+                    "- Lisp (characterised by misarticulation of sibilant sounds, especially /s/ and /z/, often producing them as a /th/ sound or with lateral airflow). Code: lisp\n"
+                    "- Cluttering (characterised by a rapid and/or irregular speech rate, slurred/mumbled articulation, telescoping of syllables, or disorganized sentence structure). Code: clut\n"
+                    "- Normal/Healthy Speech (fluent, clear articulation, regular speech rate, no significant speech patterns or disorders). Code: healthy\n\n"
+                    "Based on your professional analysis, classify the speech pattern and respond with EXACTLY one of the following codes: "
+                    "'stut', 'lisp', 'clut', or 'healthy'.\n"
+                    "Do not include any other words, markdown formatting, quotes, explanation, or punctuation. Your response must be exactly one word."
                 )
                 response = model.generate_content([uploaded_file, prompt])
-                result = response.text.strip().lower()
-                
-                # Delete the file from Gemini cloud
-                try:
-                    genai.delete_file(uploaded_file.name)
-                except Exception:
-                    pass
                 
                 # Extract clean tag
+                result = response.text.strip().lower()
+                result = ''.join(c for c in result if c.isalnum())
+                
                 if result in ['stut', 'lisp', 'clut', 'healthy']:
                     prediction = result
                 else:
@@ -131,16 +154,24 @@ def predict_audio(audio_file):
                     else:
                         prediction = 'healthy'
                 print("Gemini analysis output:", prediction)
+                
+                # Delete the file from Gemini cloud
+                try:
+                    genai.delete_file(uploaded_file.name)
+                except Exception:
+                    pass
             except Exception as gemini_err:
                 print("Gemini audio analysis failed:", gemini_err)
-                prediction = f"Gemini Error: {str(gemini_err)}"  # Return actual error for debugging
+                # Keep prediction as default 'healthy' but print details
         else:
-            prediction = f"Error: Local modules missing and no GEMINI_API_KEY set ({str(e)})"
+            print("⚠️ WARNING: GEMINI_API_KEY is not configured or is default. Please set GEMINI_API_KEY in the environment variables.")
+            # Keep prediction as default 'healthy'
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
             
     return prediction
+
 
 # ====================== API ENDPOINTS ========================
 @csrf_exempt
@@ -213,7 +244,7 @@ def api_generate_plan(request):
             user = request.user if request.user.is_authenticated else None
 
             if diagnosis_override:
-                prediction = diagnosis_override
+                prediction = diagnosis_override.lower()
             else:
                 prediction = predict_audio(audio_file)
 

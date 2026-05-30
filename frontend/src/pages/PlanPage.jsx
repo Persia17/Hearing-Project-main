@@ -105,7 +105,13 @@ function PlanPage() {
             <p className="text-slate-300 font-medium text-lg">Prepared for <span className="text-lime-400 font-bold">{planData.patient}</span></p>
             <div className="mt-4 inline-block bg-slate-800 rounded-full px-4 py-1 border border-slate-700">
                <span className="text-sm font-semibold uppercase tracking-widest text-slate-400 mr-2">Diagnosis:</span>
-               <span className="text-white font-bold capitalize">{planData.disorder === 'healthy' ? 'Healthy Speech' : planData.disorder}</span>
+               <span className="text-white font-bold capitalize">
+                 {planData.disorder === 'stut' ? 'Stuttering' :
+                  planData.disorder === 'lisp' ? 'Lisp' :
+                  planData.disorder === 'clut' ? 'Cluttering' :
+                  planData.disorder === 'healthy' ? 'Healthy Speech' :
+                  planData.disorder}
+               </span>
             </div>
           </div>
 

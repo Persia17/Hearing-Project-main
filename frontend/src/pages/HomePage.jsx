@@ -40,6 +40,16 @@ function HomePage() {
     }
   };
 
+  const getDisorderLabel = (disorder) => {
+    if (!disorder) return '';
+    const d = disorder.toLowerCase();
+    if (d === 'stut') return 'Stuttering';
+    if (d === 'lisp') return 'Lisp';
+    if (d === 'clut') return 'Cluttering';
+    if (d === 'healthy') return 'Healthy Speech';
+    return disorder;
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen font-sans">
 
@@ -134,7 +144,7 @@ function HomePage() {
                         </Link>
                         <p className="text-sm text-slate-500">Created: {report.date}</p>
                         <span className="inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-600">
-                          Diagnosis: <span className="text-lime-700 capitalize">{report.diagnosis}</span>
+                          Diagnosis: <span className="text-lime-700 capitalize">{getDisorderLabel(report.diagnosis)}</span>
                         </span>
                       </div>
                     </div>

@@ -26,6 +26,16 @@ function ResultPage() {
     fetchReport();
   }, [reportId]);
 
+  const getDisorderLabel = (disorder) => {
+    if (!disorder) return '';
+    const d = disorder.toLowerCase();
+    if (d === 'stut') return 'Stuttering';
+    if (d === 'lisp') return 'Lisp';
+    if (d === 'clut') return 'Cluttering';
+    if (d === 'healthy') return 'Normal / Healthy Speech';
+    return disorder;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex justify-center items-center">
@@ -86,7 +96,7 @@ function ResultPage() {
             </div>
             <div className="flex justify-between items-center bg-lime-50 p-4 rounded-xl border border-lime-100 mt-6 shadow-sm">
               <span className="font-bold text-lime-800 uppercase tracking-wide text-sm">Diagnosis:</span>
-              <span className="font-black text-2xl text-lime-600 capitalize">{report.diagnosis}</span>
+              <span className="font-black text-2xl text-lime-600 capitalize">{getDisorderLabel(report.diagnosis)}</span>
             </div>
           </div>
 
